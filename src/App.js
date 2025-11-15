@@ -34,31 +34,31 @@ import AddEmail from './components/member/AddEmail/AddEmail';
 import AddFullName from './components/member/AddName/AddName';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
   if (isLoading) return <div className="loading-fullscreen">লোড হচ্ছে...</div>;
 
-  // if (!isAuthenticated) {
-  //   // লগইন না থাকলে লগইন পেজে রিডাইরেক্ট করবে
-  //   return <Navigate to="/login" state={{ from: location }} replace />;
-  // }
-
-  return children;
-};
-
-const PublicRoute = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-
-  if (isLoading) return <div className="loading-fullscreen">লোড হচ্ছে...</div>;
-
-  if (isAuthenticated) {
-    // লগইন থাকলে হোম পেজে রিডাইরেক্ট করবে
-    return <Navigate to="/" replace />;
+  if (!user) {
+    // লগইন না থাকলে লগইন পেজে রিডাইরেক্ট করবে
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;
 };
+
+// const PublicRoute = ({ children }) => {
+//    const { isAuthenticated, isLoading, user } = useAuth();
+
+//   if (isLoading) return <div className="loading-fullscreen">লোড হচ্ছে...</div>;
+
+//   if (!user) {
+//     // লগইন থাকলে হোম পেজে রিডাইরেক্ট করবে
+//     return <Navigate to="/" replace />;
+//   }
+
+//   return children;
+// };
 
 // শুধুমাত্র পাবলিক রাউটের জন্য (লগইন ছাড়া এক্সেস করা যাবে)
 const PublicOnlyRoute = ({ children }) => {
@@ -140,7 +140,7 @@ function AppContent({ showError, showSuccess, showWarning, showInfo }) {
         </Route>
 
         <Route path="/login" element={
-          <PublicRoute>
+          // <PublicRoute>
             <PopupLayout>
               <LoginPage
                 showError={showError}
@@ -149,10 +149,10 @@ function AppContent({ showError, showSuccess, showWarning, showInfo }) {
                 showInfo={showInfo}
               />
             </PopupLayout>
-          </PublicRoute>
+          // </PublicRoute>
         } />
         <Route path="/register" element={
-          <PublicRoute>
+          // <PublicRoute>
             <PopupLayout>
               <RegisterPage
                 showError={showError}
@@ -161,7 +161,7 @@ function AppContent({ showError, showSuccess, showWarning, showInfo }) {
                 showInfo={showInfo}
               />
             </PopupLayout>
-          </PublicRoute>
+          // </PublicRoute>
         } />
       </Routes>
 

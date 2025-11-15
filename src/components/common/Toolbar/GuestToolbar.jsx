@@ -200,25 +200,7 @@ export default function GuestToolbar({ showError, showSuccess, showWarning, show
           </div>
         </div>
 
-        {/* Bottom Navigation Tabs */}
-        <div className="toolbar-tabs">
-          {tabs.map((tab) => (
-            <div 
-              key={tab.id}
-              className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => handleTabClick(tab)}
-            >
-              <div className="tab-icon">
-                <img 
-                  src={activeTab === tab.id ? tab.activeIcon : tab.icon} 
-                  alt={tab.label}
-                  className="icon-img"
-                />
-              </div>
-              <span className="tab-label">{tab.label}</span>
-            </div>
-          ))}
-        </div>
+        
       </div>
 
       {/* Currency & Language Popup */}
