@@ -43,7 +43,7 @@ const GamesProvidersPage = () => {
     const fetchData = async (category_name) => {
       try {
         setIsLoading(true);
-        const result = await apiService.get("/New-table-Games-with-Providers", "GET", {
+        const result = await apiService.get("/api/games/New-table-Games-with-Providers", "GET", {
           category_name: category_name,
         });
         console.log("GamesProvidersPage category result", result.data);
@@ -101,7 +101,7 @@ const GamesProvidersPage = () => {
           : selectedProvider;
 
       const result = await apiService.get(
-        "/New-Games-with-Providers-By-Category",
+        "/api/games/New-Games-with-Providers-By-Category",
         "GET",
         {
           category_name: category_name,

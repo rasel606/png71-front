@@ -178,7 +178,7 @@ export const useGameData = ( category_name) => {
     try {
       // setLoading(true);
       const result = await apiService.get(
-        "/New-Games-with-Providers-By-Category",
+        "/api/games/New-Games-with-Providers-By-Category",
         "GET",
         {
           category_name: category_name,
