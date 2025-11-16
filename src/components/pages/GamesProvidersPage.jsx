@@ -10,7 +10,7 @@ import SortBar from "../games/SortBar";
 import JackpotBanner from "../games/JackpotBanner";
 import { useGamePlay } from "../../hooks/useGamePlay";
 import { useApp } from "../../contexts/AppContext";
-
+import { apiService } from '../../services/api';
 const GamesProvidersPage = () => {
   const { category_name, providercode } = useParams();
   const [data, setData] = useState([]);
@@ -43,7 +43,7 @@ const GamesProvidersPage = () => {
     const fetchData = async (category_name) => {
       try {
         setIsLoading(true);
-        const result = await apiCall("/New-table-Games-with-Providers", "GET", {
+        const result = await apiService.get("/New-table-Games-with-Providers", "GET", {
           category_name: category_name,
         });
         console.log("GamesProvidersPage category result", result.data);
@@ -100,7 +100,7 @@ const GamesProvidersPage = () => {
           ? selectedProvider.join(",") 
           : selectedProvider;
 
-      const result = await apiCall(
+      const result = await apiService.get(
         "/New-Games-with-Providers-By-Category",
         "GET",
         {
