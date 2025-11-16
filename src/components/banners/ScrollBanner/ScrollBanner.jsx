@@ -78,7 +78,7 @@ const ScrollBanner = () => {
 //   useEffect(() => {
 //     const fetchGames = async () => {
 //       try {
-//         const response = await fetch('http://localhost:5000/api/v1/featured');
+//         const response = await fetch('https://api.png71.live/api/v1/featured');
 //         if (!response.ok) {
 //           throw new Error('Network response was not ok');
 //         }

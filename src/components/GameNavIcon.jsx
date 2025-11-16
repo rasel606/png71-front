@@ -36,7 +36,7 @@
 
 //   useEffect(() => {
 //     setLoading(true);
-//     const url = "http://localhost:5000/api/v1/New-table-categories";
+//     const url = "https://api.png71.live/api/v1/New-table-categories";
 //     const response = fetch(url, {
 //       method: "GET",
 //       headers: {

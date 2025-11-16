@@ -2,7 +2,7 @@
 // import { useState, useEffect } from 'react';
 // import { useApi } from './useApi';
 
-// export const useGameData = (initialUrl = "http://localhost:5000/api/games/New-table-Games-with-Providers") => {
+// export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-table-Games-with-Providers") => {
 //   const [data, setData] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
@@ -142,7 +142,7 @@
 import { useState, useEffect } from 'react';
 import { useApi } from './useApi';
 
-export const useGameData = (initialUrl = "http://localhost:5000/api/games/New-table-Games-with-Providers") => {
+export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-table-Games-with-Providers") => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

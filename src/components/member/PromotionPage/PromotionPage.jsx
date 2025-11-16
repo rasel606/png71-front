@@ -9,7 +9,7 @@ import promotionsService from "../../../services/promotionService";
 
 // Constants for better maintainability
 const API_ENDPOINTS = {
-  GAME_CATEGORIES: "http://localhost:5000/api/games/New-table-Games-with-Providers",
+  GAME_CATEGORIES: "https://api.png71.live/api/games/New-table-Games-with-Providers",
 };
 
 const BONUS_TYPES = {

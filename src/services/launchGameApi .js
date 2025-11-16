@@ -1,7 +1,7 @@
 // src/utils/api.js
 export const launchGameApi = async (game_id, p_code,) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/v1/launch_gamePlayer/${game_id}/${p_code}`, {
+    const response = await fetch(`https://api.png71.live/api/v1/launch_gamePlayer/${game_id}/${p_code}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

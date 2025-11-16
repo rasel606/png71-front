@@ -22,7 +22,7 @@
 //     try {
 //       await handelUserDetails(userId);
 //       const response = await fetch.post(
-//         "http://localhost:5000/api/v1/user_balance",
+//         "https://api.png71.live/api/v1/user_balance",
 //         { userId }
 //       );
 //       setBalance(response.data.balance);
@@ -76,7 +76,7 @@ export const useRefreshBalance = () => {
     //   await handleUserDetails(userId);
 
       // Fetch latest balance directly
-      const response = await fetch("http://localhost:5000/api/v1/user_balance", {
+      const response = await fetch("https://api.png71.live/api/v1/user_balance", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
