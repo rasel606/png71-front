@@ -141,48 +141,32 @@
 // hooks/useGameData.js
 import { useState, useEffect } from 'react';
 import { useApi } from './useApi';
+import { apiService } from '../services/api';
 
-export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-table-Games-with-Providers") => {
+export const useGameData = ( category_name) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [active, setActive] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [gameData, setGameData] = useState([]);
-  
-  const { apiCall } = useApi();
+
 
   const fetchGameData = async (url = initialUrl) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      setLoading(true);
+      const result = await apiService.get("/api/games/New-table-Games-with-Providers", "GET", {
+        category_name: category_name,
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      console.log("GamesProvidersPage category result", result.data);
+      if (result.success) {
+        setData(result.data[0] || {});
       }
-
-      const result = await response.json();
-      console.log("Game categories result:", result);
-      setData(result.data || []);
-
-      // Set initial active state
-      if (result.data && result.data.length > 0) {
-        setActive(result.data[0]?.category);
-        setActiveIndex(0);
-      }
-
-      return result;
-    } catch (err) {
-      console.error("Error fetching game data:", err);
-      setError("গেম ডেটা লোড করতে সমস্যা হচ্ছে");
-      throw err;
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     } finally {
       setLoading(false);
     }
@@ -190,14 +174,18 @@ export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-t
 
   const fetchGames = async (category_name) => {
     if (!category_name) return;
-    
+
     try {
       // setLoading(true);
-      const result = await apiCall(
+      const result = await apiService.get(
         "/New-Games-with-Providers-By-Category",
         "GET",
         {
           category_name: category_name,
+          page: page,
+          provider: providerParam,
+          gameName: searchQuery,
+          sortBy: sortOption,
         }
       );
 
@@ -205,8 +193,8 @@ export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-t
       setGameData(result.data || []);
     } catch (error) {
       console.error("Error fetching games:", error);
-    // } finally {
-    //   setLoading(false);
+      // } finally {
+      //   setLoading(false);
     }
   };
 

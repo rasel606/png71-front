@@ -28,7 +28,7 @@ const GamesProvidersPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const loader = useRef();
   const limit = 24;
-  const { apiCall } = useApi();
+
 
   const { 
     isPlaying, 
