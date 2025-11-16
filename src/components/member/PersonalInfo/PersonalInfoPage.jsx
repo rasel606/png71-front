@@ -526,7 +526,9 @@ const PersonalInfoPage = ({
 
     try {
       const fullPhoneNumber = `+${phone.countryCode}${phone.number}`;
-      const result = await phoneVerificationService.sendVerificationCode(phone.number);
+      const result = await phoneVerificationService.sendVerificationCode(
+        phone.number
+      );
 
       if (result.success) {
         // Navigate to verification code page with phone number
@@ -807,6 +809,13 @@ const PersonalInfoPage = ({
                               <label className="tips">
                                 {formatPhoneNumber(phone)}
                               </label>
+                              {user.phone && user.phone.length !== 0 &&
+                                (<a  class="add-phone-btn ng-tns-c1015751608-28 show"  onClick={handleAddPhone}>
+                                  <div class="icon-add-phone-btn ng-tns-c1015751608-28">
+                                    </div>
+                                    <p  class="ng-tns-c1015751608-28">Add</p>
+                                    </a>)
+                              }
                             </div>
                           </div>
                           <div className="right">
@@ -817,15 +826,22 @@ const PersonalInfoPage = ({
                             ) : (
                               <div
                                 className={`status unconfirm-btn ng-star-inserted ${
-                                  verifyingPhone === phone.number ? "verifying" : ""
+                                  verifyingPhone === phone.number
+                                    ? "verifying"
+                                    : ""
                                 }`}
                                 onClick={() => handleVerifyPhone(phone)}
                                 style={{
-                                  cursor: verifyingPhone === phone.number ? "default" : "pointer",
+                                  cursor:
+                                    verifyingPhone === phone.number
+                                      ? "default"
+                                      : "pointer",
                                   textDecoration: "underline",
                                 }}
                               >
-                                {verifyingPhone === phone.number ? "Sending..." : "যাচাই করা হয়নি"}
+                                {verifyingPhone === phone.number
+                                  ? "Sending..."
+                                  : "যাচাই করা হয়নি"}
                               </div>
                             )}
                             {!phone.isDefault && (
@@ -840,14 +856,18 @@ const PersonalInfoPage = ({
                               </button>
                             )}
                           </div>
+                          {/* {user.phone.number &&
+                            user.phone.number.length !== 0 && (
+                              <a
+                                className="add-phone-btn"
+                                onClick={handleAddPhone}
+                              >
+                                <div className="icon-add-phone-btn"></div>
+                                <p>অ্যাড</p>
+                              </a>
+                            )} */}
                         </div>
                       ))}
-                    {(!user.phone || user.phone.length === 0) && (
-                      <a className="add-phone-btn" onClick={handleAddPhone}>
-                        <div className="icon-add-phone-btn"></div>
-                        <p>অ্যাড</p>
-                      </a>
-                    )}
                   </div>
                 </div>
                 {/* Email */}

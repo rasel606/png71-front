@@ -92,7 +92,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const PopupLayout = ({ showBackButton,className, children }) => {
+const PopupLayout = ({ showBackButton, className, children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -142,22 +142,22 @@ const PopupLayout = ({ showBackButton,className, children }) => {
       <div className="popup-page popup-page--active popup-page--align-top">
         <div className="popup-page__backdrop" onClick={closeModal}></div>
         <div className="popup-page__main popup-page-main popup-page-main--show">
-          <div className="popup-page-main__header new-login-tab">
+          
+          <div className={`popup-page-main__header ${className}`}>
             {showBackButton && (
-              <div
-                className="popup-page-main__back"
-                // style={{
-                //   maskImage:
-                //     'url("/assets/images/icon-set/icon-arrow-type01.svg")',
-                // }}
-                onClick={handleBack}
-              ></div>
+              <div className={`popup-page-main__back`}
+                style={{
+                  maskImage:
+                    "url('https://img.s628b.com/sb/h5/assets/images/icon-set/icon-arrow-type01.svg')",
+                }}
+                onClick={closeModal}
+              >
+              </div>
             )}
             <div className="popup-page-main__title">{getTitle()}</div>
             <div className="popup-page-main__close" onClick={closeModal}></div>
           </div>
           <div className="popup-page-main__container">
-            
             <div className={`content mcd-style  ${className}`}>{children}</div>
           </div>
         </div>

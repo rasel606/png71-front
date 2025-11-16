@@ -10,9 +10,11 @@ import { launchGameApi } from "../services/launchGameApi ";
 import phoneVerificationService from "../services/phoneVerificationService";
 import turnoverService from "../services/TurnoverService";
 import promotionsService from "../services/promotionService";
+import { Navigate, useLocation } from "react-router-dom";
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const location = useLocation();
   const { login, user, setUser } = useAuth();
   const [gameLaunchState, setGameLaunchState] = useState({
     show: false,
@@ -45,9 +47,12 @@ export const AppProvider = ({ children }) => {
   //   }
   // };
 
-  const handleRefresh = async () => {
+  const handleRefresh = async (userId) => {
     if (refreshing) return;
-
+if (!userId) {
+      
+      return <Navigate to="/login"  />;
+    }
     setRefreshing(true);
 
     // handelUserDetails(userId);
@@ -68,11 +73,19 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+
+
+  /////-----------------------------------------------------Launch game API response-------------------------------------------------/////
+
   console.log("Launch game API response:", gameLaunchState.gameUrl);
   const [loading, setLoading] = useState(false);
 
   // ✅ Function to call API and show popup
   const launchGame = async (game) => {
+    if (!user?.userId) {
+      
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
     setLoading(true);
     handleRefresh(user.userId);
     try {
@@ -109,6 +122,12 @@ export const AppProvider = ({ children }) => {
       handleRefresh();
     }
   }, [user?.userId]);
+
+ /////-----------------------------------------------------Launch game API response-------------------------------------------------/////
+
+
+
+
 
   //-------------------------------Promotions--------------------------------------//
 

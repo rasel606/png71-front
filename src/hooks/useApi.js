@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const API_BASE = 'https://api.png71.live/api/games';
+const API_BASE = 'http://localhost:5000/api/games';
 
 export const useApi = () => {
   const [loading, setLoading] = useState(false);

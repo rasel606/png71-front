@@ -106,7 +106,7 @@ const Deposit = ({
     const fetchPaymentMethods = async () => {
         try {
             setLoading(true);
-            const response = await fetch('https://api.png71.live/api/payment-methods/direct-owners-user', {
+            const response = await fetch('http://localhost:5000/api/payment-methods/direct-owners-user', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

@@ -2764,6 +2764,7 @@ html.is-desktop .nav-category {
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: 80%;
+  mask-image:url("https://superbaji.fun/assets/images/icon-set/icon-arrow-type01.svg"),
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 80%;
