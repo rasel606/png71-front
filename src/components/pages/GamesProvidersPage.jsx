@@ -40,7 +40,7 @@ const GamesProvidersPage = () => {
 
   // Fetch providers data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (category_name) => {
       try {
         setIsLoading(true);
         const result = await apiCall("/New-table-Games-with-Providers", "GET", {
