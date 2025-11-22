@@ -7,7 +7,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import VerificationTips from "../../common/VerificationTips/VerificationTips";
 
 const Deposit = ({
-  showError,
+  // showError,
   showSuccess,
   showWarning,
   showInfo,
@@ -19,6 +19,7 @@ const Deposit = ({
   const [depositChannel, setDepositChannel] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showError, setShowError] = useState(null);
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -26,64 +27,65 @@ const Deposit = ({
   const { promotions, fetchPromotions, setNotificationFunctions } = useApp();
 
   // Check verification status
-  const hasVerifiedPhone =
+  const hasVerifiedPhone = 
     user?.phone?.some((phone) => phone.verified) || false;
   const isBlocked = !hasVerifiedPhone;
+
 
   // Set notification functions in context
   useEffect(() => {
     if (setNotificationFunctions) {
       setNotificationFunctions({
-        showError,
+        
         showSuccess,
         showWarning,
         showInfo,
       });
     }
-  }, [setNotificationFunctions, showError, showSuccess, showWarning, showInfo]);
+  }, [setNotificationFunctions,  showSuccess, showWarning, showInfo]);
 
-  // const paymentMethods = [
-  //   {
-  //     id: "bkash",
-  //     name: "bKash",
-  //     icon: "/assets/images/payment/bkash.png",
-  //     type: "mobile",
-  //     bonus: "+4%",
-  //   },
-  //   {
-  //     id: "nagad",
-  //     name: "Nagad",
-  //     icon: "/assets/images/payment/nagad.png",
-  //     type: "mobile",
-  //     bonus: "+4%",
-  //   },
-  //   {
-  //     id: "rocket",
-  //     name: "Rocket",
-  //     icon: "/assets/images/payment/rocket.png",
-  //     type: "mobile",
-  //     bonus: "+4%",
-  //   },
-  //   {
-  //     id: "upay",
-  //     name: "UPay",
-  //     icon: "/assets/images/payment/upay.png",
-  //     type: "mobile",
-  //     bonus: "+4%",
-  //   },
-  //   {
-  //     id: "usdt_trc20",
-  //     name: "USDT TRC20",
-  //     icon: "/assets/images/icon-set/player/crypto/trc20.svg",
-  //     type: "crypto",
-  //   },
-  //   {
-  //     id: "usdt_erc20",
-  //     name: "USDT ERC20",
-  //     icon: "/assets/images/icon-set/player/crypto/erc20.svg",
-  //     type: "crypto",
-  //   },
-  // ];
+  const paymentMethodsLocal = [
+    {
+      id: "bkash",
+      name: "bKash",
+      icon: "https://img.s628b.com/sb/h5/assets/images/payment/bkash.png?v=1763700584552&source=mcdsrc",
+      type: "mobile",
+      bonus: "+4%",
+    },
+    {
+      id: "nagad",
+      name: "Nagad",
+      icon: "https://img.s628b.com/sb/h5/assets/images/payment/nagad.png?v=1763700584552&source=mcdsrc",
+      type: "mobile",
+      bonus: "+4%",
+    },
+    {
+      id: "rocket",
+      name: "Rocket",
+      icon: "https://img.s628b.com/sb/h5/assets/images/payment/rocket.png",
+      type: "mobile",
+      bonus: "+4%",
+    },
+    {
+      id: "upay",
+      name: "UPay",
+      icon: "https://img.s628b.com/sb/h5/assets/images/payment/upay.png",
+      type: "mobile",
+      bonus: "+4%",
+    },
+    {
+      id: "usdt_trc20",
+      name: "USDT TRC20",
+      icon: "/assets/images/icon-set/player/crypto/trc20.svg",
+      type: "crypto",
+    },
+    {
+      id: "usdt_erc20",
+      name: "USDT ERC20",
+      icon: "/assets/images/icon-set/player/crypto/erc20.svg",
+      type: "crypto",
+    },
+  ];
 
 
 
@@ -116,14 +118,14 @@ const Deposit = ({
             const data = await response.json();
 
             if (data.success) {
-                setPaymentMethods(data.paymentMethods);
+                setPaymentMethods(data.paymentMethods || paymentMethodsLocal);
                 
             } else {
-                showError('Error', data.message || 'Failed to load payment methods');
+                setShowError('Error', data.message || 'Failed to load payment methods');
             }
         } catch (error) {
             console.error('Error fetching payment methods:', error);
-            showError('Error', 'Failed to load payment methods. Please try again.');
+            setShowError('Error', 'Failed to load payment methods. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -235,7 +237,7 @@ const Deposit = ({
 
     const validation = validateForm();
     if (!validation.isValid) {
-      showError("Error", validation.message);
+    setShowError("Error", validation.message);
       return;
     }
 
@@ -284,7 +286,7 @@ const Deposit = ({
       setPaymentType("");
     } catch (error) {
       console.error("Deposit error:", error);
-      showError(
+      setShowError(
         "Deposit Failed",
         "Failed to process deposit. Please try again."
       );
@@ -437,22 +439,28 @@ const Deposit = ({
                           </p>
                         </div>
                       )}
-                      <span className="item-icon"></span>
+                      <span className={` ${paymentMethod === method.id ? 'item-icon' : ''}`}
+                      
+                      style={{
+                                      maskImage:
+                                        'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+                                      WebkitMaskImage:
+                                        'url("https://img.c88rx.com/cx/h5/assets/images/player/select-check.svg?v=1739862678809")',
+                                    }}
+                      
+                      ></span>
                     </label>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
-
-          {/* Payment Type - Show only for mobile payments */}
-          {!isBlocked && getSelectedPaymentMethod()?.type === "mobile" && (
+            {!isBlocked && getSelectedPaymentMethod()?.type === "mobile" && (
             <div className="select-group">
-              <div className="title">
+              {/* <div className="title">
                 <h2>
                   <span>Payment Type</span>
                 </h2>
-              </div>
+              </div> */}
               <ul className="col2">
                 <li className="payment-type-item">
                   <input
@@ -468,7 +476,7 @@ const Deposit = ({
                     <span className="item-icon"></span>
                   </label>
                 </li>
-                <li className="payment-type-item">
+                {/* <li className="payment-type-item">
                   <input
                     type="radio"
                     name="paymentType"
@@ -483,10 +491,14 @@ const Deposit = ({
                     <span>{getSelectedPaymentMethod()?.name} Send Money</span>
                     <span className="item-icon"></span>
                   </label>
-                </li>
+                </li>  */}
               </ul>
             </div>
           )}
+          </div>
+
+          {/* Payment Type - Show only for mobile payments */}
+          
 
           {/* Deposit Channel */}
           {!isBlocked && (

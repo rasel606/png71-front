@@ -5,14 +5,17 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'; // Import use
 import SignupForm from './SignupForm';
 import Carousel from '../../common/Carousel';
 import Logo from '../../common/Logo/Logo';
+import { useAuth } from '../../../contexts/AuthContext';
 
 
 const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showError }) => {
+    const { register } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
+    userId: '',
     password: '',
-    phoneNumber: '',
-    countryCode: '+880'
+    phone: '',
+    countryCode: '+880' ,
+     referralCode: localStorage.getItem("referralCode") || ''
   });
   
   const [formErrors, setFormErrors] = useState({});
@@ -58,12 +61,12 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
     const errors = {};
     
     // Username validation
-    if (!formData.username) {
-      errors.username = 'Username is required';
-    } else if (formData.username.length < 4 || formData.username.length > 15) {
-      errors.username = 'Username must be 4-15 characters';
-    } else if (!/^[a-zA-Z0-9]+$/.test(formData.username)) {
-      errors.username = 'Username can only contain letters and numbers';
+    if (!formData.userId) {
+      errors.userId = 'Username is required';
+    } else if (formData.userId.length < 4 || formData.userId.length > 15) {
+      errors.userId = 'Username must be 4-15 characters';
+    } else if (!/^[a-zA-Z0-9]+$/.test(formData.userId)) {
+      errors.userId = 'Username can only contain letters and numbers';
     }
 
     // Password validation
@@ -76,12 +79,12 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
     }
 
     // Phone validation
-    if (!formData.phoneNumber) {
-      errors.phoneNumber = 'Phone number is required';
-    } else if (!/^\d+$/.test(formData.phoneNumber)) {
-      errors.phoneNumber = 'Phone number must contain only digits';
-    } else if (formData.phoneNumber.length < 10) {
-      errors.phoneNumber = 'Phone number must be at least 10 digits';
+    if (!formData.phone) {
+      errors.phone = 'Phone number is required';
+    } else if (!/^\d+$/.test(formData.phone)) {
+      errors.phone = 'Phone number must contain only digits';
+    } else if (formData.phone.length < 10) {
+      errors.phone = 'Phone number must be at least 10 digits';
     }
 
     setFormErrors(errors);
@@ -108,7 +111,7 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
 
     try {
       // Simulate API call
-      const response = await mockRegisterAPI(formData);
+      const response = await register(formData);
       
       if (response.success) {
         showSuccess('Registration successful! Welcome to our platform.');
@@ -132,28 +135,28 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
   };
 
   // Mock API function - replace with actual API call
-  const mockRegisterAPI = async (userData) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Simulate random success/failure for demo
-        const isSuccess = Math.random() > 0.2;
+  // const mockRegisterAPI = async (userData) => {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       // Simulate random success/failure for demo
+  //       const isSuccess = Math.random() > 0.2;
         
-        if (isSuccess) {
-          resolve({
-            success: true,
-            user: {
-              id: Math.random().toString(36).substr(2, 9),
-              username: userData.username,
-              phone: userData.phoneNumber
-            },
-            message: 'User registered successfully'
-          });
-        } else {
-          reject(new Error('Username already exists or server error'));
-        }
-      }, 1500);
-    });
-  };
+  //       if (isSuccess) {
+  //         resolve({
+  //           success: true,
+  //           user: {
+  //             id: Math.random().toString(36).substr(2, 9),
+  //             userId: userData.userId,
+  //             phone: userData.phone
+  //           },
+  //           message: 'User registered successfully'
+  //         });
+  //       } else {
+  //         reject(new Error('Username already exists or server error'));
+  //       }
+  //     }, 1500);
+  //   });
+  // };
 
   const handleLoginRedirect = () => {
     navigate('/login', { 
@@ -192,7 +195,7 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
       
       <p className="button-tips">
         <span>Already a member? </span>
-        <Link to="/login">Log in</Link>
+        <Link onClick={()=>handleLoginRedirect()}>Log in</Link>
       </p>
       
       <p className="footer-tips">

@@ -139,7 +139,7 @@
 
 
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useApp } from "../../contexts/AppContext";
@@ -154,8 +154,16 @@ export default () => {
   const { user, isAuthenticated } = useAuth();
   const { gameLaunchState, closeGame, launchGame, setGameLaunchState } = useApp();
   const { balance, refreshing, handleRefresh } = useRefreshBalance();
-  const { data, loading, active, activeIndex, handleItemClick, gameData } = useGameData();
+  const { data, loading, active, activeIndex, handleItemClick, gameData , setActive, setActiveIndex } = useGameData();
   const { isFixed, scrollStopped } = useScroll();
+
+ useEffect(() => {
+    if (data.length > 0 && !active) {
+      setActive(data[0]);
+      setActiveIndex(0);
+    }
+  }, [data, active]);
+
 
   const onRefreshBalance = () => {
     if (user?.userId) {
@@ -166,33 +174,35 @@ export default () => {
   // Fixed handleGamePlay function with authentication check
   const handleGamePlay = async (game) => {
     // If user is not authenticated, redirect to login
-    if (!isAuthenticated) {
-      navigate('/login', { 
-        state: { 
-          from: window.location.pathname,
+    // if (!isAuthenticated) {
+    //   navigate('/login', { 
+    //     state: { 
+    //       from: window.location.pathname,
          
-        } 
-      });
-      return;
-    }
+    //     } 
+    //   });
+    //   return;
+    // }
+
+
 
     // If user is authenticated, launch the game
     const result = await launchGame(game);
     console.log("Game launch result:", result);
-    if (result.success) {
-      console.log("Game launched successfully");
-    } else if (result.requiresLogin) {
-      // This should not happen if route guards are working properly
-      navigate('/login', { 
-        state: { 
-          from: window.location.pathname,
-          message: "গেম খেলতে লগইন করুন" 
-        } 
-      });
-    } else {
-      console.error("Game launch failed:", result.message);
-      // You can show an error notification here
-    }
+    // if (result.success) {
+    //   console.log("Game launched successfully");
+    // } else if (result.requiresLogin) {
+    //   // This should not happen if route guards are working properly
+    //   navigate('/login', { 
+    //     state: { 
+    //       from: window.location.pathname,
+    //       message: "গেম খেলতে লগইন করুন" 
+    //     } 
+    //   });
+    // } else {
+    //   console.error("Game launch failed:", result.message);
+    //   // You can show an error notification here
+    // }
   };
 
   // Handle game link click with authentication

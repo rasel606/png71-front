@@ -227,7 +227,7 @@ const MemberMenu = () => {
               <span className="amount">
                 <i className="balance-value">
                   <i id="" style={{ display: "initial", color: "#fff" }}>
-                    {showBalance ? `৳ ${userBalance?.toFixed(2)}` : "•••••"}
+                    {showBalance  ? `৳ ${userBalance?.toFixed(2) || "0.00"}` : "•••••"}
                   </i>
                 </i>
               </span>

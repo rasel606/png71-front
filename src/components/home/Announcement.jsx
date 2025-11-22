@@ -121,7 +121,7 @@ const Marquee = ({
                   <p>
                     <span style={{ 
                       color: announcement.color, 
-                      fontSize: announcement.fontSize 
+                      // fontSize: announcement.fontSize 
                     }}>
                       <strong>{announcement.content}</strong>
                     </span>

@@ -15,7 +15,7 @@ const ReferBonusPopup = ({ showError, showSuccess, showWarning, showInfo }) => {
   const [showBonusDetails, setShowBonusDetails] = useState(false);
 
   const invitationCode = `${user.referralCode}`;
-  const invitationUrl = `https://kingbaji.live/?ref=${user.referralCode}`;
+  const invitationUrl = `https://api.png71.live/?ref=${user.referralCode}`;
   console.log("user", user)
   const closeModal = () => {
     if (location.state?.background) {
@@ -29,28 +29,83 @@ const ReferBonusPopup = ({ showError, showSuccess, showWarning, showInfo }) => {
     setShowBonusDetails(!showBonusDetails);
   };
 
-  const handleCopyCode = (text, type) => {
-    navigator.clipboard.writeText(text).then(() => {
-      showSuccess(`${type} copied to clipboard!`);
-    }).catch(err => {
-      showError('Failed to copy to clipboard');
-    });
-  };
+  // const handleCopyCode = (text, type) => {
+  //   navigator.clipboard.writeText(text).then(() => {
+  //     showSuccess(`${type} copied to clipboard!`);
+  //   }).catch(err => {
+  //     showError('Failed to copy to clipboard');
+  //   });
+  // };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Join me on KingBaji',
-        text: 'Use my referral code to get bonus!',
-        url: invitationUrl,
-      })
-        .then(() => showSuccess('Invitation shared successfully'))
-        .catch((error) => showError('Error sharing invitation'));
-    } else {
-      handleCopyCode(invitationUrl, 'Invitation URL');
+  // const handleShare = () => {
+  //   if (navigator.share) {
+  //     navigator.share({
+  //       title: 'Join me on KingBaji',
+  //       text: 'Use my referral code to get bonus!',
+  //       url: invitationUrl,
+  //     })
+  //       .then(() => showSuccess('Invitation shared successfully'))
+  //       .catch((error) => showError('Error sharing invitation'));
+  //   } else {
+  //     handleCopyCode(invitationUrl, 'Invitation URL');
+  //   }
+  // };
+const handleCopyCode = async (text, type) => {
+    console.log('Attempting to copy:', text);
+    
+    try {
+      // Method 1: Modern Clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        showSuccess(`${type} copied to clipboard!`);
+        return;
+      }
+      
+      // Method 2: execCommand fallback
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      if (successful) {
+        showSuccess(`${type} copied to clipboard!`);
+      } else {
+        throw new Error('execCommand failed');
+      }
+    } catch (err) {
+      console.error('Copy failed:', err);
+      showError('Failed to copy to clipboard');
     }
   };
 
+  const handleShare = async () => {
+    console.log('Sharing:', invitationUrl);
+    
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Join me on KingBaji',
+          text: 'Use my referral code to get bonus!',
+          url: invitationUrl,
+        });
+        showSuccess('Invitation shared successfully');
+      } else {
+        // Fallback: copy to clipboard
+        await handleCopyCode(invitationUrl, 'Invitation URL');
+      }
+    } catch (err) {
+      console.error('Share failed:', err);
+      if (err.name !== 'AbortError') {
+        // Only show error if user didn't cancel the share
+        showError('Failed to share invitation');
+      }
+    }
+  };
   const handleClaimBonus = () => {
     if (canClaimBonus > 0) {
       showSuccess(`Successfully claimed ৳ ${canClaimBonus} bonus!`);

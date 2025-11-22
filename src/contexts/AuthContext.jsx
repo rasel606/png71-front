@@ -16,7 +16,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem('png71-user'));
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         authService.setToken(token);
         await fetchUserProfile();
       } else {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
     
@@ -47,13 +47,44 @@ export const AuthProvider = ({ children }) => {
         logout(); // Only logout on authentication errors
       }
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
+  const register = async (formData, language = 'en') => {
+    try {
+      setLoading(true);
+      console.log("Registering user:",
+         {userId: formData.userId, password: formData.password, phone: formData.phone, countryCode: formData.countryCode, language});
+
+
+      const response = await authService.register({userId: formData.userId, password: formData.password, phone: formData.phone, countryCode: formData.countryCode, language});
+      
+      console.log("Login response:", response.user);
+      
+      // Handle different response structures
+      const newToken = response.token || response.data?.token;
+      const userData = response.user || response.data || response;
+      
+      if (newToken) {
+        setToken(newToken);
+        localStorage.setItem('png71-user', newToken);
+        authService.setToken(newToken);
+      }
+      
+      setUser(userData);
+      
+      return response;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw new Error(error.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
   const login = async (userId, password, language = 'en') => {
     try {
-      setIsLoading(true);
+      setLoading(true);
       const response = await authService.login({userId: userId, password, language});
       
       console.log("Login response:", response.user);
@@ -75,7 +106,7 @@ export const AuthProvider = ({ children }) => {
       console.error("Login error:", error);
       throw new Error(error.message || 'Login failed');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -89,11 +120,12 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     token,
-    isLoading,
+    loading,
     login,
     logout,
     isAuthenticated: !!user && !!token,
-    setUser
+    setUser,
+    register,
   };
 
   return (

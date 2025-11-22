@@ -25,6 +25,20 @@ export const AppProvider = ({ children }) => {
     // userIp: ''
   });
 
+
+
+
+  useEffect(() => {
+    // Get the query parameters
+    const params = new URLSearchParams(location.search);
+    const referralCode = params.get("ref");
+
+    // If referral code exists, open the SignUpModal
+    if (referralCode) {
+      localStorage.setItem("referralCode", referralCode);
+    }
+  }, []);
+
   const [turnoverData, setTurnoverData] = useState({
     active: [],
     completed: [],
@@ -47,11 +61,10 @@ export const AppProvider = ({ children }) => {
   //   }
   // };
 
-  const handleRefresh = async (userId) => {
+  const handleRefresh = useCallback(async () => {
     if (refreshing) return;
-if (!userId) {
-      
-      return <Navigate to="/login"  />;
+    if (!user?.userId) {
+      return <Navigate to="/login" />;
     }
     setRefreshing(true);
 
@@ -71,9 +84,7 @@ if (!userId) {
     } finally {
       setTimeout(() => setRefreshing(false), 1000); // Proper finally block
     }
-  };
-
-
+  },[ user?.userId])
 
   /////-----------------------------------------------------Launch game API response-------------------------------------------------/////
 
@@ -83,7 +94,6 @@ if (!userId) {
   // ✅ Function to call API and show popup
   const launchGame = async (game) => {
     if (!user?.userId) {
-      
       return <Navigate to="/login" state={{ from: location }} replace />;
     }
     setLoading(true);
@@ -123,11 +133,7 @@ if (!userId) {
     }
   }, [user?.userId]);
 
- /////-----------------------------------------------------Launch game API response-------------------------------------------------/////
-
-
-
-
+  /////-----------------------------------------------------Launch game API response-------------------------------------------------/////
 
   //-------------------------------Promotions--------------------------------------//
 

@@ -617,23 +617,7 @@ const PersonalInfoPage = ({
   }
 
   return (
-    <div className="popup-page-wrapper active">
-      <div className="popup-page show-toolbar popup-page--active popup-page--align-top">
-        <div className="popup-page__backdrop" onClick={closeModal}></div>
-        <div className="popup-page__main popup-page-main popup-page-main--show">
-          {/* Header */}
-          <div className="popup-page-main__header">
-            <div className="popup-page-main__title">ব্যাক্তিগত তথ্য</div>
-            <div
-              className="popup-page-main__close ng-star-inserted"
-              onClick={closeModal}
-            >
-              ✕
-            </div>
-          </div>
 
-          {/* Content */}
-          <div className="popup-page-main__container">
             <div className="content mcd-style new-profile player-content third-party-login">
               {/* VIP Card Section */}
               <div className="player-vip-lv1 ng-star-inserted">
@@ -923,10 +907,7 @@ const PersonalInfoPage = ({
               {/* Footer Note */}
               <ContactCustomer />
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
   );
 };
 

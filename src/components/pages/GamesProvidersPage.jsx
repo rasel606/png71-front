@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useApi } from "../../hooks/useApi";
 import GameBox from "../games/GameBox";
 import SearchTab from "../games/SearchTab";
@@ -10,7 +10,8 @@ import SortBar from "../games/SortBar";
 import JackpotBanner from "../games/JackpotBanner";
 import { useGamePlay } from "../../hooks/useGamePlay";
 import { useApp } from "../../contexts/AppContext";
-import { apiService } from '../../services/api';
+import { useAuth } from "../../contexts/AuthContext";
+
 const GamesProvidersPage = () => {
   const { category_name, providercode } = useParams();
   const [data, setData] = useState([]);
@@ -19,7 +20,7 @@ const GamesProvidersPage = () => {
     providercode ? [providercode] : "ALL"
   );
 
-  const { gameLaunchState, closeGame, launchGame, setGameLaunchState } = useApp();
+  const { gameLaunchState, closeGame, launchGame, setGameLaunchState,handleRefresh } = useApp();
   const [sortOption, setSortOption] = useState("recommend");
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -28,6 +29,10 @@ const GamesProvidersPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const loader = useRef();
   const limit = 24;
+  const { apiCall } = useApi();
+  const { user,isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  // const { handleRefresh } = useApp();
 
 
   const { 
@@ -40,10 +45,10 @@ const GamesProvidersPage = () => {
 
   // Fetch providers data
   useEffect(() => {
-    const fetchData = async (category_name) => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
-        const result = await apiService.get("/api/games/New-table-Games-with-Providers", "GET", {
+        const result = await apiCall("/New-table-Games-with-Providers", "GET", {
           category_name: category_name,
         });
         console.log("GamesProvidersPage category result", result.data);
@@ -100,8 +105,8 @@ const GamesProvidersPage = () => {
           ? selectedProvider.join(",") 
           : selectedProvider;
 
-      const result = await apiService.get(
-        "/api/games/New-Games-with-Providers-By-Category",
+      const result = await apiCall(
+        "/New-Games-with-Providers-By-Category",
         "GET",
         {
           category_name: category_name,
@@ -182,6 +187,60 @@ const GamesProvidersPage = () => {
     setHasMore(true);
   };
 
+  //////////===========================================handle effects lunch game==================//////////
+
+
+  const onRefreshBalance = () => {
+    if (user?.userId) {
+      handleRefresh(user.userId);
+    }
+  };
+
+  // Fixed handleGamePlay function with authentication check
+  const handleGamePlay = async (game,userId) => {
+ 
+    // If user is not authenticated, redirect to login
+    // if (!isAuthenticated || !userId) {
+    //   navigate('/login', { 
+    //     state: { 
+    //       from: window.location.pathname,
+         
+    //     } 
+    //   });
+    //   return;
+    // }
+
+    // If user is authenticated, launch the game
+    const result = await launchGame(game);
+    console.log("Game launch result:", result);
+    if (result) {
+      console.log("Game launched successfully");
+    } 
+    
+    // else if (result.requiresLogin) {
+    //   // This should not happen if route guards are working properly
+    //   navigate('/login', { 
+    //     state: { 
+    //       from: window.location.pathname,
+    //       message: "গেম খেলতে লগইন করুন" 
+    //     } 
+    //   });
+    // } 
+    // else {
+    //   console.error("Game launch failed:", result.error);
+    //   // You can show an error notification here
+    // }
+  };
+
+  // Handle game link click with authentication
+  // const handleGameLinkClick = (game) => {
+  //   // e.preventDefault();
+  //   handleGamePlay(game);
+  // };
+
+
+//////////===========================================handle effects lunch game==================//////////
+
   return (
     <div className="content mcd-style">
       <div className="content-main">
@@ -223,7 +282,7 @@ const GamesProvidersPage = () => {
                 <GameBox
                   key={game._id}
                   game={game}
-                  onPlay={launchGame}
+                  onPlay={(game) => handleGamePlay(game, user?.userId)}
                   type="game"
                 />
               ))}

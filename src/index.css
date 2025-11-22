@@ -4224,7 +4224,8 @@ mcd-referral-bonus-terms-conditions .referral-cont li+li {
     width: 16vw;
     height: 16vw;
     transition: .5s;
-    background: #4574a8cc
+    background: #4574a8cc;
+    border: none;
 }
 
 .pop-wrap .btn-close .item-icon {
@@ -4406,7 +4407,7 @@ mcd-referral-bonus-terms-conditions .referral-cont li+li {
     list-style: square
 }
 
-.pop-check .pop-title {
+.pop-title {
     padding: 0 4vw
 }
 
@@ -18079,7 +18080,7 @@ header.empty .header-right-btn-group {
     white-space: normal
 }
 
-.select-group.checkbox-style [type=radio]:checked+label .tag-recommond,.tag-recommond {
+.select-group.checkbox-style [type=radio]:checked+label .tag-recommond,.tag-rec nbcv ommond {
     position: absolute;
     top: 1.3333333333vw;
     left: -1.0666666667vw;
@@ -18361,6 +18362,58 @@ header.empty .header-right-btn-group {
     background: #183859e6
 }
 
+.tag-rebate-money {
+  position: absolute;
+  z-index: 3;
+  top: 1.3333333333vw;
+  right: -1.0666666667vw;
+  /* padding: 0 0.8vw; */
+
+  border-radius: 0 0.8vw 0.8vw 0;
+  opacity: 0;
+  background: #d15454;
+  box-shadow: 0 0 2px #0000004d;
+  color: #fff;
+  line-height: 0;
+  pointer-events: none;
+
+  background-color: #d15454;
+font-weight: 700;
+  font-size: 12px;
+  margin-left: 10px;
+  animation: slideIn 1s 0.3s forwards;
+  font-family: Bebas Neue, Helvetica, Tahoma, sans-serif;
+}
+
+.tag-rebate-money p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-family: Bebas Neue, Helvetica, Tahoma, sans-serif;
+}
+
+.tag-rebate-money:before,
+.tag-rebate-money:after {
+  content: "";
+  position: absolute;
+  left: -6px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background: transparent;
+}
+
+.tag-rebate-money:before {
+  top: 0;
+  border-width: 0 6px 11px 0;
+  border-color: transparent #d15454 transparent transparent;
+}
+
+.tag-rebate-money:after {
+  bottom: 0;
+  border-width: 0 0 11px 6px;
+  border-color: transparent transparent #d15454;
+}
 .under-maintain .maintain-mask .maintain-tag {
     padding: .8vw 1.3333333333vw;
     border-radius: .5333333333vw;

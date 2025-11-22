@@ -8,23 +8,24 @@ const GameLaunchPopup = ({
   gameUrl,
 //   providerLogo,
 //   providerName,
+
   userName,
 //   userIp
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
-  const { handleRefresh } = useApp();
+  const { handleRefresh, loading, setLoading, setGameLaunchState } = useApp();
 console.log('Launch game API response:', gameUrl);
   useEffect(() => {
     if (show) {
       document.body.style.overflow = 'hidden';
       // Simulate loading completion after 2 seconds
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
+      // const timer = setTimeout(() => {
+      //   setLoading(false);
+      // }, 2000);
 
       return () => {
-        clearTimeout(timer);
+        // clearTimeout(timer);
         document.body.style.overflow = 'unset';
       };
     }
@@ -38,32 +39,17 @@ console.log('Launch game API response:', gameUrl);
   };
 
   const handleIframeLoad = () => {
-    setIsLoading(false);
+    // setLoading(false);
   };
 
-  if (!show) return null;
 
-  return (
-    <div className="cdk-overlay-container">
-      <div 
-        className="cdk-overlay-backdrop dialog-backdrop cdk-overlay-backdrop-showing"
-        onClick={handleBackdropClick}
-      ></div>
-      
-      <div className="cdk-global-overlay-wrapper" dir="ltr" style={{ justifyContent: "center", alignItems: "center" }}>
-        <div className="cdk-overlay-pane dialog-panel" style={{ position: "static" }}>
-          <div className="popup" id="dialog-5">
-            <div className="popup__header"></div>
-            <div className="popup__content">
-              <div className="launch-game-content ng-star-inserted">
-                
-                {/* Loading Section */}
-                <div 
+  if(loading){
+    return <div 
                   className="launch-game-loading" 
-                  style={{ display: isLoading ? 'block' : 'none' }}
+                  style={{ display: loading ? 'block' : 'none' }}
                 >
                   <div className="loading-bg" style={{ display: 'none' }}></div>
-                  <div className="loader-round" style={{ opacity: isLoading ? 1 : 0 }}>
+                  <div className="loader-round" style={{ opacity: loading ? 1 : 0 }}>
                     <svg 
                       version="1.2" 
                       baseProfile="tiny" 
@@ -131,12 +117,32 @@ console.log('Launch game API response:', gameUrl);
                       )} */}
                     </div>
                   </div>
-                </div>
+                </div>}
 
-                {/* Game Content Section */}
+
+
+  if (!show) return null;
+
+  return (
+    <div className="cdk-overlay-container">
+      <div 
+        className="cdk-overlay-backdrop dialog-backdrop cdk-overlay-backdrop-showing"
+        onClick={handleBackdropClick}
+      ></div>
+      
+      <div className="cdk-global-overlay-wrapper" dir="ltr" style={{ justifyContent: "center", alignItems: "center" }}>
+        <div className="cdk-overlay-pane dialog-panel" style={{ position: "static" }}>
+          <div className="popup" id="dialog-5">
+            <div className="popup__header"></div>
+            <div className="popup__content">
+              <div className="launch-game-content ng-star-inserted">
+                
+                {/* Loading Section */}
+
+
                 <div 
                   className="launch-game-page" 
-                  style={{ display: isLoading ? 'none' : 'block' }}
+                  style={{ display: loading ? 'none' : 'block' }}
                 >
                   {/* Top Menu Bar */}
                   <div className="site-top" style={{ display: 'block' }}>

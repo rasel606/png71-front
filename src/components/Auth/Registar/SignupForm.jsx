@@ -53,7 +53,7 @@ const SignupForm = ({
           <input
             type="text"
             value={formData.username}
-            onChange={(e) => onInputChange('username', e.target.value.replace(/\s/g, ''))}
+            onChange={(e) => onInputChange('userId', e.target.value.replace(/\s/g, ''))}
             className={`input ${formErrors.username ? 'error' : ''}`}
             placeholder="4-15 char, allow number"
           />
@@ -61,11 +61,11 @@ const SignupForm = ({
             <input 
               type="button" 
               className="clear active" 
-              onClick={() => onInputChange('username', '')}
+              onClick={() => onInputChange('userId', '')}
             />
           )}
-          {formErrors.username && (
-            <div className="error-message">{formErrors.username}</div>
+          {formErrors.userId && (
+            <div className="error-message">{formErrors.userId}</div>
           )}
         </div>
 
@@ -147,21 +147,21 @@ const SignupForm = ({
             <input
               type="tel"
               inputMode="tel"
-              value={formData.phoneNumber}
-              onChange={(e) => onInputChange('phoneNumber', e.target.value)}
-              className={`input ${formErrors.phoneNumber ? 'error' : ''}`}
+              value={formData.phone}
+              onChange={(e) => onInputChange('phone', e.target.value)}
+              className={`input ${formErrors.phone ? 'error' : ''}`}
               placeholder="Enter your phone number."
             />
-            {formData.phoneNumber && (
+            {formData.phone && (
               <input 
                 type="button" 
                 className="clear" 
-                onClick={() => onInputChange('phoneNumber', '')}
+                onClick={() => onInputChange('phone', '')}
               />
             )}
           </div>
-          {formErrors.phoneNumber && (
-            <div className="error-message">{formErrors.phoneNumber}</div>
+          {formErrors.phone && (
+            <div className="error-message">{formErrors.phone}</div>
           )}
         </div>
 

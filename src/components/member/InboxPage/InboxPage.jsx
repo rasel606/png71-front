@@ -147,7 +147,7 @@ const Inbox = () => {
   };
 
   return (
-    <div className="content mcd-style player-content">
+    <>
       <div className="inner-box">
         <div className="inbox-list__editor editor">
           <div
@@ -254,7 +254,7 @@ const Inbox = () => {
         title={showDetails?.title || ""}
         content={showDetails?.fullContent || showDetails?.text || ""}
       />
-    </div>
+    </>
   );
 };
 

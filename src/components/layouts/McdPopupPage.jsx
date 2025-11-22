@@ -302,6 +302,7 @@ const McdPopupPage = ({
               <div
                 className="pop-bg ng-trigger ng-trigger-popBgTriggerAni ng-tns-c1663769977-14 ng-star-inserted"
                 style={{ display: "block" }}
+                onClick={handleBackdropClick}
               ></div>
             </div>
           </div>

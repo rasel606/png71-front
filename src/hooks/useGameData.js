@@ -1,14 +1,18 @@
+
 // // hooks/useGameData.js
 // import { useState, useEffect } from 'react';
 // import { useApi } from './useApi';
 
-// export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-table-Games-with-Providers") => {
+// export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-table-Games-with-Providers", category_name, selectedProvider) => {
 //   const [data, setData] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
 //   const [active, setActive] = useState(null);
 //   const [activeIndex, setActiveIndex] = useState(0);
+//   const [gameData, setGameData] = useState([]);
+  
 //   const { apiCall } = useApi();
+
 //   const fetchGameData = async (url = initialUrl) => {
 //     setLoading(true);
 //     setError(null);
@@ -26,12 +30,12 @@
 //       }
 
 //       const result = await response.json();
-//       console.log(result)
-//       setData(result.data);
+//       console.log("Game categories result:", result);
+//       setData(result.data || []);
 
 //       // Set initial active state
-//       if (result.length > 0) {
-//         setActive(result[0]?.category);
+//       if (result.data && result.data.length > 0) {
+//         setActive(result.data[0]?.category);
 //         setActiveIndex(0);
 //       }
 
@@ -45,26 +49,11 @@
 //     }
 //   };
 
-//   useEffect(() => {
-//     fetchGameData();
-//   }, []);
-
-
-
-//   const [gameData, setGameData] = useState([]);
-
-
 //   const fetchGames = async (category_name) => {
-
-
+//     if (!category_name) return;
+    
 //     try {
-//       setLoading(true);
-//       // const providerParam = selectedProvider === "ALL"
-//       //   ? ""
-//       //   : Array.isArray(selectedProvider)
-//       //     ? selectedProvider.join(",")
-//       //     : selectedProvider;
-
+//       // setLoading(true);
 //       const result = await apiCall(
 //         "/New-Games-with-Providers-By-Category",
 //         "GET",
@@ -74,39 +63,40 @@
 //       );
 
 //       console.log("GET GamesProvidersPage result:", result);
-
-
 //       setGameData(result.data || []);
-
-
-
-
-
 //     } catch (error) {
 //       console.error("Error fetching games:", error);
-
-//     } finally {
-//       setLoading(false);
+//     // } finally {
+//     //   setLoading(false);
 //     }
 //   };
 
 //   useEffect(() => {
-//     if (active && activeIndex > 2) {
-//       fetchGames(active.category_name);
-//     }
+//     fetchGameData();
+//   }, []);
 
-//   }, [active, activeIndex]);
-
+//   // Fetch games when active category changes
 //   useEffect(() => {
-//     if (data.length > 0) {
-//       setActive(data[0]?.category);
-//       setActiveIndex(0); // Reset index when data changes
+//     if (active && active.category_name) {
+//       fetchGames(active.category_name || "");
 //     }
-//   }, [data]);
+//   }, [active, data]);
 
-//   const handleItemClick = (index, item) => {
+//   console.log(data)
+//   // Set initial active category when data loads
+//   useEffect(() => {
+//     if (data.length > 0 && !active) {
+//       setActive(data[0]);
+//       setActiveIndex(0);
+//     }
+//   }, [data, active]);
+
+//   const handleItemClick = (index, item, onClose) => {
 //     setActiveIndex(index);
-//     setActive(item ? item : data[0]?.category?.uniqueProviders);
+//     setActive(item?.category || item);
+//     // if (onClose ) {
+//     //   onClose();
+//     // }
 //   };
 
 //   const refetch = () => {
@@ -138,35 +128,53 @@
 //   };
 // };
 
+
+
 // hooks/useGameData.js
 import { useState, useEffect } from 'react';
 import { useApi } from './useApi';
-import { apiService } from '../services/api';
 
-export const useGameData = ( category_name) => {
+export const useGameData = (initialUrl = "https://api.png71.live/api/games/New-table-Games-with-Providers", category_name, selectedProvider) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [active, setActive] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [gameData, setGameData] = useState([]);
-
+  
+  const { apiCall } = useApi();
 
   const fetchGameData = async (url = initialUrl) => {
     setLoading(true);
     setError(null);
 
     try {
-      setLoading(true);
-      const result = await apiService.get("/api/games/New-table-Games-with-Providers", "GET", {
-        category_name: category_name,
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
-      console.log("GamesProvidersPage category result", result.data);
-      if (result.success) {
-        setData(result.data[0] || {});
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    } catch (error) {
-      console.error("Error fetching categories:", error);
+
+      const result = await response.json();
+      console.log("Game categories result:", result);
+      setData(result.data || []);
+
+      // Set initial active state
+      if (result.data && result.data.length > 0) {
+        setActive(result.data[0]?.category);
+        setActiveIndex(0);
+      }
+
+      return result;
+    } catch (err) {
+      console.error("Error fetching game data:", err);
+      setError("গেম ডেটা লোড করতে সমস্যা হচ্ছে");
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -174,18 +182,13 @@ export const useGameData = ( category_name) => {
 
   const fetchGames = async (category_name) => {
     if (!category_name) return;
-
+    
     try {
-      // setLoading(true);
-      const result = await apiService.get(
-        "/api/games/New-Games-with-Providers-By-Category",
+      const result = await apiCall(
+        "/New-Games-with-Providers-By-Category",
         "GET",
         {
           category_name: category_name,
-          page: page,
-          provider: providerParam,
-          gameName: searchQuery,
-          sortBy: sortOption,
         }
       );
 
@@ -193,8 +196,6 @@ export const useGameData = ( category_name) => {
       setGameData(result.data || []);
     } catch (error) {
       console.error("Error fetching games:", error);
-      // } finally {
-      //   setLoading(false);
     }
   };
 
@@ -209,18 +210,17 @@ export const useGameData = ( category_name) => {
     }
   }, [active, data]);
 
-  console.log(data)
   // Set initial active category when data loads
-  useEffect(() => {
-    if (data.length > 0 && !active) {
-      setActive(data[0]);
-      setActiveIndex(0);
-    }
-  }, [data, active]);
+ 
 
-  const handleItemClick = (index, item) => {
+  const handleItemClick = (index, item, onClose, shouldClose = true) => {
     setActiveIndex(index);
     setActive(item?.category || item);
+    
+    // Only call onClose if provided and shouldClose is true
+    if (onClose && shouldClose) {
+      onClose();
+    }
   };
 
   const refetch = () => {
@@ -240,6 +240,7 @@ export const useGameData = ( category_name) => {
   return {
     data,
     loading,
+    setLoading,
     error,
     active,
     activeIndex,

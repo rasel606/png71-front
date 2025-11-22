@@ -5,7 +5,7 @@ import McdPopupPage from "../../layouts/McdPopupPage";
 const MessageItem = ({
   show = false,
   onClose,
-  title ,
+  title,
   content,
   position = "top",
   size = "popup-large",
@@ -44,22 +44,33 @@ const MessageItem = ({
         </div>
         <div className="popup__content">
           <div
-            className={`pop-wrap ${animation ? "ani show" : ""}`}
+            className={`pop-wrap ani ${animation ? "show" : ""}`}
             id="popInbox"
             onClick={(e) => e.stopPropagation()} // Prevent clicks inside from closing
           >
-            {showCloseButton && (
-              <a className="btn-close" onClick={handleCloseButtonClick}>
-                <span
-                  className="item-icon"
-                  style={{
-                    backgroundImage:
-                      'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type01.svg?v=1761024116679")',
-                  }}
-                ></span>
-              </a>
-            )}
+            <>
+              {showCloseButton && (
+                // <a className="btn-close" onClick={handleCloseButtonClick}>
+                //   <span
+                //     className="item-icon"
+                //     style={{
+                //       backgroundImage:
+                //         'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type01.svg?v=1761024116679")',
+                //     }}
+                //   ></span>
+                // </a>
 
+                <button className="btn-close" onClick={handleCloseButtonClick}>
+                  <span
+                    className="item-icon"
+                    style={{
+                      backgroundImage:
+                        'url("https://img.s628b.com/sb/h5/assets/images/icon-set/icon-cross-type01.svg")',
+                    }}
+                  ></span>
+                </button>
+              )}
+            </>
             <div className="pop-title">
               <h3>{title}</h3>
             </div>
