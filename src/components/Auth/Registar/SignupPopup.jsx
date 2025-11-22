@@ -17,6 +17,7 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
     countryCode: '+880' ,
      referralCode: localStorage.getItem("referralCode") || ''
   });
+  console.log("Referral Code:", formData.referralCode);
   
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -110,6 +111,7 @@ const SignupPopup = ({ onRegisterSuccess, onRegisterError, showSuccess, showErro
     setIsSubmitting(true);
 
     try {
+      console.log("Submitting registration with data:", formData);
       // Simulate API call
       const response = await register(formData);
       
